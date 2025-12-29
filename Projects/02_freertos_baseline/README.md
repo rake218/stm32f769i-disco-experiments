@@ -165,6 +165,15 @@ Expected: LED blinking.
 | LED | Blinks |
 | Faults | None |
 
+
+Results:
+<img width="489" height="146" alt="image" src="https://github.com/user-attachments/assets/0ae3e828-2523-4e87-a6c9-250616c3b2a2" />
+
+
+
+https://github.com/user-attachments/assets/251038a9-9388-454a-9033-e00c89e93881
+
+
 ---
 
 ## 10. Known Issues
