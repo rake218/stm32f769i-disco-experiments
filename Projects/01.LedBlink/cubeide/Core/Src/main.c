@@ -207,7 +207,7 @@ void LedTask(void const *argument)
   for (;;)
   {
     HAL_GPIO_TogglePin(GPIOJ, GPIO_PIN_13);
-    osDelay(200);   // NOT HAL_Delay
+    osDelay(700);   // NOT HAL_Delay
   }
 }
 
