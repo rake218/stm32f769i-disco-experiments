@@ -28,7 +28,14 @@ Each experiment is self-contained and reproducible on any PC using STM32CubeIDE.
 - On-board ST-LINK debugger
 
 ---
+## How to Use This Repository
 
+- Clone the repository
+- Open STM32CubeIDE
+- Import the project from projects/<experiment>/cubeide
+- Build, flash, and debug on STM32F769I-DISCO
+
+---
 ## Repository Structure
 
 ```text
@@ -36,3 +43,6 @@ projects/
 └── <experiment_name>/
     ├── docs/        → requirements, design, verification, results
     └── cubeide/     → STM32CubeIDE project (buildable)
+
+---
+
