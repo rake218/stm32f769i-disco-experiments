@@ -60,7 +60,7 @@ static void MX_TIM12_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+void main_cpu_hogTask_hp(void const * argument);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -84,6 +84,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+ //__asm volatile ("BKPT #0");
 
   /* USER CODE END Init */
 
@@ -130,6 +131,8 @@ int main(void)
   osThreadCreate(osThread(led1Task), NULL);
   osThreadDef(led2Task, LedTask2, osPriorityLow, 0, 256);
   osThreadCreate(osThread(led2Task), NULL);
+  osThreadDef(hogTask, main_cpu_hogTask_hp, osPriorityHigh,0,256);
+  osThreadCreate(osThread(hogTask),NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
@@ -366,6 +369,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_13|DSI_RESET_Pin|GPIO_PIN_5, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(KSAT_PH_DEL_GPIO_Port, KSAT_PH_DEL_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : SAI1_FSA_Pin SAI1_SDB_Pin SAI1_SCKA_Pin SAI1_SDA_Pin */
   GPIO_InitStruct.Pin = SAI1_FSA_Pin|SAI1_SDB_Pin|SAI1_SCKA_Pin|SAI1_SDA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -519,13 +525,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF9_QUADSPI;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : ARD_D13_SCK_Pin */
-  GPIO_InitStruct.Pin = ARD_D13_SCK_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  /*Configure GPIO pin : KSAT_PH_DEL_Pin */
+  GPIO_InitStruct.Pin = KSAT_PH_DEL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
-  HAL_GPIO_Init(ARD_D13_SCK_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(KSAT_PH_DEL_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : NC4_Pin NC5_Pin uSD_Detect_Pin LCD_BL_CTRL_Pin */
   GPIO_InitStruct.Pin = NC4_Pin|NC5_Pin|uSD_Detect_Pin|LCD_BL_CTRL_Pin;
@@ -820,6 +825,14 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void main_cpu_hogTask_hp(void const * argument)
+{
+	while(1)
+	{
+		HAL_GPIO_TogglePin(LED3_GPIO_PORT, LED3_GPIO_PIN);
+		//osDelay(100);
+	}
+}
 
 /* USER CODE END 4 */
 

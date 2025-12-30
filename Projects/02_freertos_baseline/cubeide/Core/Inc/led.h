@@ -27,9 +27,13 @@
 #define LED2_GPIO_PORT GPIOJ
 #define LED2_GPIO_PIN  GPIO_PIN_5
 
+#define LED3_GPIO_PORT GPIOA
+#define LED3_GPIO_PIN  GPIO_PIN_12
+
 /* RTOS task prototypes */
 void LedTask1(void const * argument);
 void LedTask2(void const * argument);
+
 
 #endif /* LED_H */
 
