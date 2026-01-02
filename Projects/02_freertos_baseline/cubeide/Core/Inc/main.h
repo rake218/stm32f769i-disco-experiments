@@ -365,6 +365,7 @@ void Error_Handler(void);
 #define ARDUINO_MOSI_PWM_D11_Pin GPIO_PIN_15
 #define ARDUINO_MOSI_PWM_D11_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+#define IDLE_MAX_COUNT 1210322UL /*Idle counter value when CPU is 100% idle for 1 second*/
 
 /* USER CODE END Private defines */
 

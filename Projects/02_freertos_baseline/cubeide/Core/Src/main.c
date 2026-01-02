@@ -48,7 +48,9 @@ TIM_HandleTypeDef htim12;
 
 osThreadId defaultTaskHandle;
 /* USER CODE BEGIN PV */
-
+volatile uint32_t idleCounter = 0;
+volatile uint32_t idleCounterSnapshot = 0;
+volatile uint32_t cpuLoadPercent = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,11 +62,61 @@ static void MX_TIM12_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
-
+void CpuMonitorTask( void const *argment);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/*Fn: vApplicationIdleHook
+ * Des:   This is called back by the scheduler, if user defined this
+ * In this expt, a counter is incremented to identify idle cycles
+ *                                          */
+void vApplicationIdleHook(void)
+{
+    idleCounter++;
+}
+
+/*Fn: CpuMonitorTask
+ * Des:   This task is used to calculate the cpu load percentage
+ *                                          */
+
+void CpuMonitorTask( void const *argment)
+{
+    uint32_t lastIdleCount = 0;
+
+    for (;;)
+    {
+        osDelay(1000); // 1 second window
+
+        idleCounterSnapshot = idleCounter - lastIdleCount;
+        lastIdleCount = idleCounter;
+
+        // Calibration value (measured once at idle-only)
+        // Example: idleMax = 120000
+        cpuLoadPercent = 100 - ((idleCounterSnapshot * 100) / IDLE_MAX_COUNT);
+    }
+
+}
+/*Fn: CpuMonitorTask
+ * Des:   This task is used to calculate the cpu load percentage
+ *                                          */
+void HPTask(void const *argment )
+{
+    //uint32_t a_u32_hptask_cntr = (uint32_t)0;
+	uint32_t a_u32_lc = 0;
+	while(1)
+	{
+        for (a_u32_lc = 0; a_u32_lc < 500000; a_u32_lc++)
+        {
+            __NOP();
+        }
+
+        osDelay(100);
+
+	}
+
+}
 
 /* USER CODE END 0 */
 
@@ -130,6 +182,10 @@ int main(void)
   osThreadCreate(osThread(led1Task), NULL);
   osThreadDef(led2Task, LedTask2, osPriorityLow, 0, 256);
   osThreadCreate(osThread(led2Task), NULL);
+  osThreadDef(CPUMtask,CpuMonitorTask,osPriorityNormal, 0, 256);
+  osThreadCreate(osThread(CPUMtask), NULL);
+  osThreadDef(hptask, HPTask, osPriorityHigh, 0, 256);
+  osThreadCreate(osThread(hptask), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* Start scheduler */
