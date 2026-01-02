@@ -65,6 +65,20 @@ void StartDefaultTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    (void)xTask;
+    (void)pcTaskName;
+
+    __disable_irq();
+    while (1);
+}
+
+void vApplicationMallocFailedHook(void)
+{
+    __disable_irq();
+    while (1);
+}
 
 /* USER CODE END 0 */
 
